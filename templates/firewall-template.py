@@ -12,12 +12,16 @@ def GenerateConfig(context):
             'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
             'sourceRanges': ['0.0.0.0/0'],
             'allowed': [{
-                'IPProtocol': 'TCP',
-                'ports': [22, 80, 443]
-            }, {
-                'IPProtocol': 'ICMP',
+                'IPProtocol': 'all',
                 'ports': []
             }]
+            # 'allowed': [{
+            #     'IPProtocol': 'TCP',
+            #     'ports': [22, 80, 443]
+            # }, {
+            #     'IPProtocol': 'ICMP',
+            #     'ports': []
+            # }]
         }
     }]
     return {'resources': resources}

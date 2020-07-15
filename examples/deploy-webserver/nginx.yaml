@@ -1,0 +1,16 @@
+imports:
+- path: nginx-compute-engine-template.py
+- path: ../../templates/nginx-instance-template.py
+- path: ../../templates/vpc-template.py
+- path: ../../templates/subnet-template.py
+- path: ../../templates/firewall-template.py
+- path: scripts/nginx
+  name: nginx
+
+resources:
+- name: nginx-instance
+  type: nginx-compute-engine-template.py
+
+outputs:
+- name: NGINX Webserver IP
+  value: $(ref.deployment-nginx-webserver-instance.networkInterfaces[0].accessConfigs[0].natIP)
