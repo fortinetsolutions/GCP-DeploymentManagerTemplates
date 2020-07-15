@@ -1,0 +1,22 @@
+imports:
+- path: single-fortigate-template.py
+- path: ../../templates/fgt-instance-template.py
+- path: ../../templates/vpc-template.py
+- path: ../../templates/subnet-template.py
+- path: ../../templates/firewall-template.py
+- path: scripts/byol
+  name: byol
+- path: license/FGVM08TM20004532.lic
+  name: license.lic
+
+resources:
+- name: fortigate-instance
+  type: single-fortigate-template.py
+
+outputs:
+- name: FortiGate IP
+  value: $(ref.deployment-single-fgt-instance.networkInterfaces[0].accessConfigs[0].natIP)
+- name: Username
+  value: admin
+- name: password
+  value: ftntCl0ud
