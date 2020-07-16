@@ -6,7 +6,7 @@ imports:
 - path: ../../templates/firewall-template.py
 - path: scripts/byol
   name: byol
-- path: license/FGVM08TM20004532.lic
+- path: license/FGT_LICENSE.lic
   name: license.lic
 
 resources:

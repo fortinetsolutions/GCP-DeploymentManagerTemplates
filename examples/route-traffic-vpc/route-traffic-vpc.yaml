@@ -1,0 +1,30 @@
+imports:
+- path: route-traffic-vpc-template.py
+- path: ../../templates/fgt-instance-template.py
+- path: ../../templates/nginx-instance-template.py
+- path: ../../templates/vpc-template.py
+- path: ../../templates/subnet-template.py
+- path: ../../templates/firewall-template.py
+- path: ../../templates/static-ip-template.py
+- path: ../../templates/target-instance-template.py
+- path: ../../templates/forwarding-rules-template.py
+- path: scripts/byol
+  name: byol
+- path: scripts/nginx
+  name: nginx
+- path: license/FGT_LICENSE.lic
+  name: license.lic
+
+resources:
+- name: within-vpc
+  type: route-traffic-vpc-template.py
+
+outputs:
+- name: External IP Address
+  value: $(ref.deployment-route-traffic-vpc-static-ip.address)
+- name: FortiGate IP
+  value: $(ref.deployment-route-traffic-vpc-fgt-instance.networkInterfaces[0].accessConfigs[0].natIP)
+- name: Username
+  value: admin
+- name: password
+  value: ftntCl0ud

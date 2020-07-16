@@ -1,5 +1,5 @@
-"""Creates the VPC Networks."""
-# https://cloud.google.com/compute/docs/reference/rest/v1/networks
+"""Creates the External IP."""
+# https://cloud.google.com/compute/docs/reference/rest/v1/addresses
 
 
 def GenerateConfig(context):
@@ -8,9 +8,9 @@ def GenerateConfig(context):
 
     resources = [{
         'name': base_name,
-        'type': 'compute.v1.network',
+        'type': 'compute.v1.addresses',
         'properties': {
-            'autoCreateSubnetworks': False,
+            'region': context.properties['region']
         }
     }]
     return {'resources': resources}

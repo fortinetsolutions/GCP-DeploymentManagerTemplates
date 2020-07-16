@@ -1,4 +1,5 @@
 """Creates the Subnet"""
+# https://cloud.google.com/compute/docs/reference/rest/v1/subnetworks
 
 
 def GenerateConfig(context):
@@ -9,9 +10,9 @@ def GenerateConfig(context):
         'name': base_name,
         'type': 'compute.v1.subnetwork',
         'properties': {
-            'ipCidrRange': '172.18.0.0/24',
             'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
-            'region': 'us-central1'
+            'ipCidrRange': context.properties['ipCidrRange'],
+            'region': context.properties['region']
         }
     }]
     return {'resources': resources}

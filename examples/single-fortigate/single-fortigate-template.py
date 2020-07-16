@@ -20,7 +20,11 @@ def GenerateConfig(context):
         'type': '../../templates/vpc-template.py'
     }, {
         'name': 'subnet',
-        'type': '../../templates/subnet-template.py'
+        'type': '../../templates/subnet-template.py',
+        'properties': {
+            'ipCidrRange': '172.18.0.0/24',
+            'region': 'us-central1'
+        }
     }, {
         'name': 'firewall',
         'type': '../../templates/firewall-template.py'

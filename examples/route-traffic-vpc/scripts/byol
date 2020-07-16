@@ -1,0 +1,33 @@
+config sys glo
+set hostname byol
+end
+config system admin
+    edit "admin"
+        set password 'ftntCl0ud'
+    next
+end
+config router static
+    edit 1
+       set device port1
+       set gateway $(ref.deployment-route-traffic-vpc-subnet.gatewayAddress)
+    next
+end
+config firewall vip
+    edit "deployment-vip"
+        set extip $(ref.deployment-route-traffic-vpc-static-ip.address)
+        set extintf "port1"
+        set mappedip $(ref.deployment-route-traffic-vpc-nginx-instance.networkInterfaces[0].networkIP)
+    next
+end
+config firewall policy
+    edit 1
+        set name "allow-all"
+        set srcintf "port1"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "deployment-vip"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+    next
+end
