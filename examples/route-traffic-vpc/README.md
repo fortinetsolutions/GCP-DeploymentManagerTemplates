@@ -2,11 +2,20 @@
 
 This example creates a Fortigate Instance with BYOL, Ubuntu Instance (with nginx installed), an External IP, Compute Forwarding Rules, Compute Target Instance and bootstrap Fortigate with Static Route, Virtual IP, Firewall Policy which routes traffic through FortiGate to Ubuntu Instance (nginx) .
 
-This is a Google Cloud Deployment Manager configuration file that creates a Fortigate Instance with BYOL, Ubuntu Instance (with nginx installed), an External IP, Compute Forwarding Rules, Compute Target Instance and bootstrap Fortigate with Static Route, Virtual IP, Firewall Policy which routes traffic through FortiGate to Ubuntu Instance (nginx) along with bootstrapping the License file and password.
+This is a Google Cloud Deployment Manager configuration file that creates a Fortigate Instance with BYOL, Ubuntu Instance (with nginx installed), an External IP, Compute Forwarding Rules, Compute Target Instance.
 
-To use it, do a git clone of this repo and cd into the folder. Have gcloud installed and select/create a approrpiate <PROJECT_ID>
+Will bootstrap Fortigate 
+1. with licensing.
+1. initial password update.
+1. create a static route with the nginx compute instance gateway.
+1. create a virtual IP with external IP and internal IP of Ubuntu Compute Instance.
+1. create a firewall policy to allow all traffic.
 
-Provide the <FGT_IMAGE> and upload <LICENSE_FILE> in the license folder.
+To use it, do a git clone of this repo and cd into the route-traffic-vpc folder under examples.
+
+Make sure you have gcloud installed and configured.
+
+Provide the <FORTIGATE_VM_IMAGE> in route-traffic-vpc-template.py template and upload <LICENSE_FILE> in the license folder.
 
 Then run
 
@@ -42,7 +51,14 @@ password             <FGT_PASSWORD>
 To check the status of the deployment, run the following command:
 
 ```
-gcloud deployment-manager deployments describe deployment-single-fgt
+gcloud deployment-manager deployments describe deployment-route-traffic-vpc
+```
+
+###### Delete deployment
+To delete the deployment, run the following command:
+
+```
+gcloud deployment-manager deployments delete deployment-route-traffic-vpc
 ```
 
 For a quick introduction to Deployment Manager, see the Quickstart tutorial.

@@ -39,6 +39,7 @@ To check the status of the deployment, run the following command:
 gcloud deployment-manager deployments describe deployment-single-fgt
 ```
 
+###### Delete deployment
 To delete the deployment, run the following command:
 
 ```
