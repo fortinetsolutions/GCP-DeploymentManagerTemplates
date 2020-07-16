@@ -7,7 +7,7 @@ def GenerateConfig(context):
         'name': 'instance',
         'type': '../../templates/fgt-instance-template.py',
         'properties': {
-            'image': '/global/images/skc-fgt-vm-image',
+            'image': '<FORTIGATE_VM_IMAGE>',
             'machineType': 'n1-standard-1',
             'metadata-from-file': {
                 'license': 'license.lic',
