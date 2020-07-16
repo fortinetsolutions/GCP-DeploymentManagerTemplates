@@ -15,12 +15,12 @@ You can use Deployment Manager to create a set of Google Cloud resources and man
 ### Before you begin
 ```
 1. In the Cloud Console, on the project selector page, select or create a Cloud project.
-1. Make sure that billing is enabled for your Google Cloud project
+2. Make sure that billing is enabled for your Google Cloud project
 3. Enable the Deployment Manager and Compute Engine APIs.
 4. Install and initialize the Google Cloud SDK.
 5. Configure the gcloud command-line tool to use your project.
 
-execute "gcloud config set project [MY_PROJECT]"
+execute "gcloud config set project <MY_PROJECT>"
 
 Replace <MY_PROJECT> with your project ID.
 ```
