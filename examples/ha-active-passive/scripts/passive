@@ -1,0 +1,72 @@
+config sys glo
+set hostname passive
+end
+config system admin
+    edit "admin"
+        set password ftntCl0ud
+    next
+end
+config system interface
+    edit port1
+        set mode static
+        set ip 172.18.0.3/24
+        set allowaccess ping https ssh http fgfm
+        set description "ext"
+    next
+    edit port2
+        set mode static
+        set ip 172.18.1.3/24
+        set allowaccess ping https ssh http fgfm
+        set description "int"
+    next
+    edit port3
+        set mode static
+        set ip 172.18.2.3/24
+        set allowaccess ping https ssh http fgfm
+        set description "sync"
+    next
+    edit port4
+        set mode static
+        set ip 172.18.3.3/24
+        set allowaccess ping https ssh http fgfm
+        set description "hamgmt"
+    next
+end
+config router static
+    edit 1
+       set device port1
+       set gateway 172.18.0.1
+    next
+end
+config system ha
+    set group-name "gcp-group"
+    set mode a-p
+    set hbdev "port3" 50
+    set session-pickup enable
+    set ha-mgmt-status enable
+    config ha-mgmt-interfaces
+        edit 1
+            set interface "port4"
+            set gateway 172.18.3.1
+        next
+    end
+    set override disable
+    set priority 100
+    set unicast-hb enable
+    set unicast-hb-peerip 172.18.2.2
+    set unicast-hb-netmask 255.255.255.0
+end
+config system sdn-connector
+    edit "gcp"
+        set type gcp
+        set ha-status enable
+        config external-ip
+            edit deployment-ha-static-ip
+            next
+        end
+        config route
+            edit deployment-ha-route
+            next
+        end
+    next
+end

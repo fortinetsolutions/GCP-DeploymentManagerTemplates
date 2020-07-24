@@ -1,0 +1,82 @@
+imports:
+- path: ha-active-passive-template.py
+- path: ../../templates/fgt-instance-template.py
+- path: ../../templates/firewall-template.py
+- path: ../../templates/static-ip-template.py
+- path: ../../templates/subnet-template.py
+- path: ../../templates/vpc-template.py
+- path: scripts/active
+  name: active
+- path: scripts/passive
+  name: passive
+- path: license/<LICENSE_FILENAME>.lic
+  name: active.lic
+- path: license/<LICENSE_FILENAME>.lic
+  name: passive.lic
+
+  
+resources:
+- name: fgt-instances
+  type: ha-active-passive-template.py
+  properties:
+    canIpForward: True
+    image: skc-fgt-vm-image
+    zone: us-central1-a
+    machineType: n1-standard-4
+    destRange: 0.0.0.0/0
+    priority: 100
+    nextHopIp: 172.18.1.2
+    metadata-from-file-active:
+      license: active.lic
+      user-data: active
+    metadata-from-file-passive:
+      license: passive.lic
+      user-data: passive
+- name: vpc
+  type: ../../templates/vpc-template.py
+  properties:
+    vpcs:
+      - public
+      - private
+      - ha
+      - mgmt
+- name: subnet
+  type: ../../templates/subnet-template.py
+  properties:
+    subnets:
+      - ipCidrRange: 172.18.0.0/24
+        region: us-central1
+        vpc: public-vpc
+      - ipCidrRange: 172.18.1.0/24
+        region: us-central1
+        vpc: private-vpc
+      - ipCidrRange: 172.18.2.0/24
+        region: us-central1
+        vpc: ha-vpc
+      - ipCidrRange: 172.18.3.0/24
+        region: us-central1
+        vpc: mgmt-vpc
+- name: firewall
+  type: ../../templates/firewall-template.py
+  properties:
+    vpcs:
+      - public-vpc
+      - private-vpc
+      - ha-vpc
+      - mgmt-vpc
+- name: static-ip
+  type: ../../templates/static-ip-template.py
+  properties:
+    region: us-central1
+
+outputs:
+- name: Cluster IP Address
+  value: $(ref.deployment-ha-static-ip.address)
+- name: Active FortiGate IP
+  value: $(ref.deployment-ha-fgt-active-instance.networkInterfaces[3].accessConfigs[0].natIP)
+- name: Passive FortiGate IP
+  value: $(ref.deployment-ha-fgt-passive-instance.networkInterfaces[3].accessConfigs[0].natIP)
+- name: Username
+  value: admin
+- name: password
+  value: ftntCl0ud
