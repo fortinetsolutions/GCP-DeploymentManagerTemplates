@@ -18,6 +18,33 @@ imports:
 resources:
 - name: within-vpc
   type: route-traffic-vpc-template.py
+  properties:
+    canIpForward: False
+    image: skc-fgt-vm-image
+    machineType: n1-standard-2
+    zone: us-central1-a
+- name: vpc
+  type: ../../templates/vpc-template.py
+  properties:
+    vpcs:
+      - public
+      - private
+- name: subnet
+  type: ../../templates/subnet-template.py
+  properties:
+    subnets:
+      - ipCidrRange: 172.18.0.0/24
+        region: us-central1
+        vpc: public-vpc
+      - ipCidrRange: 172.18.1.0/24
+        region: us-central1
+        vpc: private-vpc
+- name: firewall
+  type: ../../templates/firewall-template.py
+  properties:
+    vpcs:
+      - public-vpc
+      - private-vpc
 
 outputs:
 - name: External IP Address

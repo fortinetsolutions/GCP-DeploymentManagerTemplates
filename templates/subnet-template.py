@@ -4,15 +4,18 @@
 
 def GenerateConfig(context):
 
-    base_name = context.env['deployment'] + '-' + context.env['name']
+    resources = []
+    for i in context.properties['subnets']:
+        base_name = context.env['deployment'] + \
+            '-' + i['vpc'] + '-' + context.env['name']
+        resources.append({
+            'name': base_name,
+            'type': 'compute.v1.subnetwork',
+            'properties': {
+                'network': '$(ref.' + context.env['deployment'] + '-' + i['vpc'] + '.selfLink)',
+                'ipCidrRange': i['ipCidrRange'],
+                'region': i['region']
+            }
+        })
 
-    resources = [{
-        'name': base_name,
-        'type': 'compute.v1.subnetwork',
-        'properties': {
-            'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
-            'ipCidrRange': context.properties['ipCidrRange'],
-            'region': context.properties['region']
-        }
-    }]
     return {'resources': resources}

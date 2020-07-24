@@ -1,7 +1,9 @@
 """Creates Ubuntu Instance woith nginx installed."""
+
 import six
 
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
+
 
 def GenerateConfig(context):
 
@@ -14,6 +16,14 @@ def GenerateConfig(context):
             'value': context.imports[value]
         })
     metadata = {'items': items}
+
+    vpcs = []
+    for i in context.properties['vpcs']:
+        vpcs.append({
+            'network': '$(ref.' + context.env['deployment'] + '-' + i['vpc'] + '.selfLink)',
+            'subnetwork': '$(ref.' + context.env['deployment'] + '-' + i['subnet'] + '.selfLink)',
+            'accessConfigs': i['accessConfigs']
+        })
 
     instance = {
         'zone': context.properties['zone'],
@@ -30,14 +40,7 @@ def GenerateConfig(context):
             }
         }],
         'metadata': metadata,
-        'networkInterfaces': [{
-            'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
-            'subnetwork': '$(ref.' + context.env['deployment'] + '-subnet'+'.selfLink)',
-            'accessConfigs': [{
-                'name': 'External NAT',
-                'type': 'ONE_TO_ONE_NAT'
-            }]
-        }]
+        'networkInterfaces': vpcs
     }
     # Resources to return.
     resources = {

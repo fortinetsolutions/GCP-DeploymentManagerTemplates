@@ -6,7 +6,7 @@ To use it, do a git clone of this repo and cd into examples/single-fortigate/ fo
 
 Make sure you have gcloud installed and configured.
 
-Provide the <FORTIGATE_VM_IMAGE> in single-fortigate-template.py template and upload <LICENSE_FILE> in the license folder.
+Provide the <FORTIGATE_VM_IMAGE> in fortigate-byol.yaml file and upload <LICENSE_FILE> in the license folder.
 
 Run the below command
 
@@ -21,10 +21,16 @@ Once the deployment is successful, you receive a message similar to the followin
 
 ```
 NAME                            TYPE                   STATE      ERRORS  INTENT
-deployment-single-fgt-firewall  compute.v1.firewall    COMPLETED  []
-deployment-single-fgt-instance  compute.v1.instance    COMPLETED  []
-deployment-single-fgt-subnet    compute.v1.subnetwork  COMPLETED  []
-deployment-single-fgt-vpc       compute.v1.network     COMPLETED  []
+deployment-single-fgt-instance                      compute.v1.instance    COMPLETED  []
+deployment-single-fgt-log-disk                      compute.v1.disk        COMPLETED  []
+deployment-single-fgt-private-vpc                   compute.v1.network     COMPLETED  []
+deployment-single-fgt-private-vpc-firewall-egress   compute.v1.firewall    COMPLETED  []
+deployment-single-fgt-private-vpc-firewall-ingress  compute.v1.firewall    COMPLETED  []
+deployment-single-fgt-private-vpc-subnet            compute.v1.subnetwork  COMPLETED  []
+deployment-single-fgt-public-vpc                    compute.v1.network     COMPLETED  []
+deployment-single-fgt-public-vpc-firewall-egress    compute.v1.firewall    COMPLETED  []
+deployment-single-fgt-public-vpc-firewall-ingress   compute.v1.firewall    COMPLETED  []
+deployment-single-fgt-public-vpc-subnet             compute.v1.subnetwork  COMPLETED  []
 OUTPUTS       VALUE
 FortiGate IP  <FGT_IP>
 Username      admin

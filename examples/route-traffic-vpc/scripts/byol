@@ -8,8 +8,8 @@ config system admin
 end
 config router static
     edit 1
-       set device port1
-       set gateway $(ref.deployment-route-traffic-vpc-subnet.gatewayAddress)
+        set device port1
+        set gateway $(ref.deployment-route-traffic-vpc-public-vpc-subnet.gatewayAddress)
     next
 end
 config firewall vip

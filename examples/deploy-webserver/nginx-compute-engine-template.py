@@ -12,17 +12,18 @@ def GenerateConfig(context):
             'metadata-from-file': {
                 'user-data': 'nginx'
             },
-            'zone': 'us-central1-a'
+            'zone': 'us-central1-a',
+            'vpcs': [{'vpc': 'public-vpc',
+                      'subnet': 'public-vpc-subnet',
+                      'accessConfigs': [{
+                          'name': 'External NAT',
+                          'type': 'ONE_TO_ONE_NAT'
+                      }]},
+                     {'vpc': 'private-vpc',
+                      'subnet': 'private-vpc-subnet',
+                      'accessConfigs': []}
+                     ]
         }
-    }, {
-        'name': 'vpc',
-        'type': '../../templates/vpc-template.py'
-    }, {
-        'name': 'subnet',
-        'type': '../../templates/subnet-template.py'
-    }, {
-        'name': 'firewall',
-        'type': '../../templates/firewall-template.py'
     }]
 
     return {'resources': resources}

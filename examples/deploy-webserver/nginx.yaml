@@ -10,6 +10,28 @@ imports:
 resources:
 - name: nginx-instance
   type: nginx-compute-engine-template.py
+- name: vpc
+  type: ../../templates/vpc-template.py
+  properties:
+    vpcs:
+      - public
+      - private
+- name: subnet
+  type: ../../templates/subnet-template.py
+  properties:
+    subnets:
+      - ipCidrRange: 172.18.0.0/24
+        region: us-central1
+        vpc: public-vpc
+      - ipCidrRange: 172.18.1.0/24
+        region: us-central1
+        vpc: private-vpc
+- name: firewall
+  type: ../../templates/firewall-template.py
+  properties:
+    vpcs:
+      - public-vpc
+      - private-vpc
 
 outputs:
 - name: NGINX Webserver IP

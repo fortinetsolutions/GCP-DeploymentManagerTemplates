@@ -4,37 +4,40 @@
 
 def GenerateConfig(context):
 
-    base_name = context.env['deployment'] + '-' + context.env['name']
-
-    resources = [{
-        'name': base_name + '-ingress',
-        'type': 'compute.v1.firewall',
-        'properties': {
-            'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
-            'sourceRanges': ['0.0.0.0/0'],
-            'allowed': [{
-                'IPProtocol': 'all',
-                'ports': []
-            }]
-            # 'allowed': [{
-            #     'IPProtocol': 'TCP',
-            #     'ports': [22, 80, 443]
-            # }, {
-            #     'IPProtocol': 'ICMP',
-            #     'ports': []
-            # }]
-        }
-    }, {
-        'name': base_name + '-egress',
-        'type': 'compute.v1.firewall',
-        'properties': {
-            'network': '$(ref.' + context.env['deployment'] + '-vpc'+'.selfLink)',
-            'direction': 'EGRESS',
-            'destinationRanges': ['0.0.0.0/0'],
-            'allowed': [{
-                'IPProtocol': 'all',
-                'ports': []
-            }]
-        }
-    }]
+    resources = []
+    for i in context.properties['vpcs']:
+        base_name = context.env['deployment'] + \
+            '-' + i + '-' + context.env['name']
+        resources.append({
+            'name': base_name + '-ingress',
+            'type': 'compute.v1.firewall',
+            'properties': {
+                'network': '$(ref.' + context.env['deployment'] + '-' + i + '.selfLink)',
+                'sourceRanges': ['0.0.0.0/0'],
+                'allowed': [{
+                    'IPProtocol': 'all',
+                    'ports': []
+                }]
+                # 'allowed': [{
+                #     'IPProtocol': 'TCP',
+                #     'ports': [22, 80, 443]
+                # }, {
+                #     'IPProtocol': 'ICMP',
+                #     'ports': []
+                # }]
+            }
+        })
+        resources.append({
+            'name': base_name + '-egress',
+            'type': 'compute.v1.firewall',
+            'properties': {
+                'network': '$(ref.' + context.env['deployment'] + '-' + i + '.selfLink)',
+                'direction': 'EGRESS',
+                'destinationRanges': ['0.0.0.0/0'],
+                'allowed': [{
+                    'IPProtocol': 'all',
+                    'ports': []
+                }]
+            }
+        })
     return {'resources': resources}

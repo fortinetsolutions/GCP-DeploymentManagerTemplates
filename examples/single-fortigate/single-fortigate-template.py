@@ -1,33 +1,44 @@
 """Creates a Compute Engine with Fortigate Instance, VPC, Subnet and Firewall."""
 
+COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
+
 
 def GenerateConfig(context):
 
     resources = [{
+        'type': 'compute.v1.disk',
+        'name': context.env['deployment'] + '-log-disk',
+        'properties': {
+            'zone': context.properties['zone'],
+            'sizeGb': 30,
+            'type': ''.join([COMPUTE_URL_BASE, 'projects/',
+                             context.env['project'], '/zones/',
+                             context.properties['zone'],
+                             '/diskTypes/pd-standard'])
+        }
+    }, {
         'name': 'instance',
         'type': '../../templates/fgt-instance-template.py',
         'properties': {
-            'image': '<FORTIGATE_VM_IMAGE>',
-            'machineType': 'n1-standard-1',
+            'canIpForward': context.properties['canIpForward'],
+            'machineType': context.properties['machineType'],
+            'image': context.properties['image'],
             'metadata-from-file': {
                 'license': 'license.lic',
                 'user-data': 'byol'
             },
-            'zone': 'us-central1-a'
+            'zone': context.properties['zone'],
+            'vpcs': [{'vpc': 'public-vpc',
+                      'subnet': 'public-vpc-subnet',
+                      'accessConfigs': [{
+                          'name': 'External NAT',
+                          'type': 'ONE_TO_ONE_NAT'
+                      }]},
+                     {'vpc': 'private-vpc',
+                      'subnet': 'private-vpc-subnet',
+                      'accessConfigs': []}
+                     ]
         }
-    }, {
-        'name': 'vpc',
-        'type': '../../templates/vpc-template.py'
-    }, {
-        'name': 'subnet',
-        'type': '../../templates/subnet-template.py',
-        'properties': {
-            'ipCidrRange': '172.18.0.0/24',
-            'region': 'us-central1'
-        }
-    }, {
-        'name': 'firewall',
-        'type': '../../templates/firewall-template.py'
     }]
 
     return {'resources': resources}

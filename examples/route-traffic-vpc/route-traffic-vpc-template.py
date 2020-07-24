@@ -7,38 +7,46 @@ def GenerateConfig(context):
         'name': 'fgt-instance',
         'type': '../../templates/fgt-instance-template.py',
         'properties': {
-            'image': '<FORTIGATE_VM_IMAGE>',
-            'machineType': 'n1-standard-1',
+            'canIpForward': context.properties['canIpForward'],
+            'machineType': context.properties['machineType'],
+            'image': context.properties['image'],
             'metadata-from-file': {
                 'license': 'license.lic',
                 'user-data': 'byol'
             },
-            'zone': 'us-central1-a'
+            'zone': context.properties['zone'],
+            'vpcs': [{'vpc': 'public-vpc',
+                      'subnet': 'public-vpc-subnet',
+                      'accessConfigs': [{
+                          'name': 'External NAT',
+                          'type': 'ONE_TO_ONE_NAT'
+                      }]},
+                     {'vpc': 'private-vpc',
+                      'subnet': 'private-vpc-subnet',
+                      'accessConfigs': []}
+                     ]
         }
     }, {
         'name': 'nginx-instance',
         'type': '../../templates/nginx-instance-template.py',
         'properties': {
             'image': 'ubuntu-os-cloud/global/images/family/ubuntu-1804-lts',
-            'machineType': 'n1-standard-1',
+            'machineType': context.properties['machineType'],
             'metadata-from-file': {
                 'user-data': 'nginx'
             },
-            'zone': 'us-central1-a'
+            'zone': context.properties['zone'],
+            'vpcs': [{'vpc': 'public-vpc',
+                      'subnet': 'public-vpc-subnet',
+                      'accessConfigs': [{
+                          'name': 'External NAT',
+                          'type': 'ONE_TO_ONE_NAT'
+                      }]},
+                     {'vpc': 'private-vpc',
+                      'subnet': 'private-vpc-subnet',
+                      'accessConfigs': []}
+                     ]
         }
-    }, {
-        'name': 'vpc',
-        'type': '../../templates/vpc-template.py'
-    }, {
-        'name': 'subnet',
-        'type': '../../templates/subnet-template.py',
-        'properties': {
-            'ipCidrRange': '172.18.0.0/24',
-            'region': 'us-central1'
-        }
-    }, {
-        'name': 'firewall',
-        'type': '../../templates/firewall-template.py'
     }, {
         'name': 'static-ip',
         'type': '../../templates/static-ip-template.py',
