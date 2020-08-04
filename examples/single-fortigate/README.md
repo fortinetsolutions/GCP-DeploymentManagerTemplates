@@ -6,7 +6,7 @@ To use it, do a git clone of this repo and cd into examples/single-fortigate/ fo
 
 Make sure you have gcloud installed and configured.
 
-Provide the <FORTIGATE_VM_IMAGE> in fortigate-byol.yaml file and upload <LICENSE_FILE> in the license folder.
+Provide the <FORTIGATE_VM_IMAGE>, <SERVICE_ACCOUNT_EMAIL> in fortigate-byol.yaml file and upload <LICENSE_FILE> in the license folder.
 
 Run the below command
 

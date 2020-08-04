@@ -21,13 +21,16 @@ def GenerateConfig(context):
         'type': '../../templates/fgt-instance-template.py',
         'properties': {
             'canIpForward': context.properties['canIpForward'],
-            'machineType': context.properties['machineType'],
             'image': context.properties['image'],
+            'machineType': context.properties['machineType'],
             'metadata-from-file': {
                 'license': 'license.lic',
                 'user-data': 'byol'
             },
-            'zone': context.properties['zone'],
+            'serviceAccounts': [{
+                'email': context.properties['serviceAccountEmail'],
+                'scopes': context.properties['scopes']
+            }],
             'vpcs': [{'vpc': 'public-vpc',
                       'subnet': 'public-vpc-subnet',
                       'accessConfigs': [{
@@ -37,7 +40,8 @@ def GenerateConfig(context):
                      {'vpc': 'private-vpc',
                       'subnet': 'private-vpc-subnet',
                       'accessConfigs': []}
-                     ]
+                     ],
+            'zone': context.properties['zone'],
         }
     }]
 

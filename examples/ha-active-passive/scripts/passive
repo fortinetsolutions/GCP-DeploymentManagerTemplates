@@ -6,6 +6,12 @@ config system admin
         set password ftntCl0ud
     next
 end
+config router static
+    edit 1
+       set device port1
+       set gateway 172.18.0.1
+    next
+end
 config system interface
     edit port1
         set mode static
@@ -30,12 +36,6 @@ config system interface
         set ip 172.18.3.3/24
         set allowaccess ping https ssh http fgfm
         set description "hamgmt"
-    next
-end
-config router static
-    edit 1
-       set device port1
-       set gateway 172.18.0.1
     next
 end
 config system ha

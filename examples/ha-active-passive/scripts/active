@@ -3,7 +3,7 @@ set hostname active
 end
 config system admin
     edit "admin"
-        set password 'ftntCl0ud'
+        set password ftntCl0ud
     next
 end
 config router static
@@ -47,7 +47,7 @@ config system ha
     config ha-mgmt-interfaces
         edit 1
             set interface "port4"
-            set 172.18.3.1
+            set gateway 172.18.3.1
         next
     end
     set override disable

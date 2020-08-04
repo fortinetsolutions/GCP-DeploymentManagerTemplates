@@ -9,29 +9,29 @@ imports:
   name: active
 - path: scripts/passive
   name: passive
-- path: license/<LICENSE_FILENAME>.lic
+- path: license/<PATH_TO_LICENSE_FILE>.lic # Path of the license file
   name: active.lic
-- path: license/<LICENSE_FILENAME>.lic
+- path: license/<PATH_TO_LICENSE_FILE>.lic # Path of the license file
   name: passive.lic
 
-  
 resources:
 - name: fgt-instances
   type: ha-active-passive-template.py
   properties:
     canIpForward: True
-    image: skc-fgt-vm-image
-    zone: us-central1-a
+    image: <FORTIGATE_VM_IMAGE>
     machineType: n1-standard-4
+    region: us-central1
+    zone: us-central1-a
     destRange: 0.0.0.0/0
     priority: 100
     nextHopIp: 172.18.1.2
-    metadata-from-file-active:
-      license: active.lic
-      user-data: active
-    metadata-from-file-passive:
-      license: passive.lic
-      user-data: passive
+    serviceAccountEmail: <SERVICE_ACCOUNT_EMAIL>
+    scopes:
+      - https://www.googleapis.com/auth/userinfo.email
+      - https://www.googleapis.com/auth/compute
+      - https://www.googleapis.com/auth/devstorage.read_only
+      - https://www.googleapis.com/auth/cloud-platform
 - name: vpc
   type: ../../templates/vpc-template.py
   properties:

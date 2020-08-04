@@ -10,6 +10,7 @@ def GenerateConfig(context):
 
     base_name = context.env['deployment'] + '-' + context.env['name']
 
+    # Metadata
     items = []
     for key, value in six.iteritems(context.properties['metadata-from-file']):
         items.append({
@@ -18,6 +19,7 @@ def GenerateConfig(context):
         })
     metadata = {'items': items}
 
+    # VPCs
     vpcs = []
     for i in context.properties['vpcs']:
         vpcs.append({
@@ -43,6 +45,7 @@ def GenerateConfig(context):
             }
         }],
         'metadata': metadata,
+        'serviceAccounts': context.properties['serviceAccounts'],
         'networkInterfaces': vpcs
     }
 

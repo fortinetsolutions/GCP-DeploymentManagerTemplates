@@ -7,14 +7,6 @@ COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 
 def GenerateConfig(context):
 
-    passive_items = []
-    for key, value in six.iteritems(context.properties['metadata-from-file-passive']):
-        passive_items.append({
-            'key': key,
-            'value': context.imports[value]
-        })
-    passive_metadata = {'items': passive_items}
-
     resources = [{
         'name': 'fgt-active-instance',
         'type': '../../templates/fgt-instance-template.py',
@@ -23,7 +15,14 @@ def GenerateConfig(context):
             'machineType': context.properties['machineType'],
             'image': context.properties['image'],
             'zone': context.properties['zone'],
-            'metadata-from-file': context.properties['metadata-from-file-active'],
+            'metadata-from-file': {
+                'license': 'active.lic',
+                'user-data': 'active'
+            },
+            'serviceAccounts': [{
+                'email': context.properties['serviceAccountEmail'],
+                'scopes': context.properties['scopes']
+            }],
             'vpcs': [{
                 'vpc': 'public-vpc',
                 'subnet': 'public-vpc-subnet',
@@ -67,7 +66,21 @@ def GenerateConfig(context):
                                             context.properties['image']])
                 }
             }],
-            'metadata': passive_metadata,
+            'metadata': {
+                'items': [{
+                    'key': 'license',
+                    'value': context.imports['passive.lic']
+                }, {
+                    'key': 'user-data',
+                    'value': context.imports['passive']
+                }]
+            },
+            'serviceAccounts': [
+                {
+                    'email': context.properties['serviceAccountEmail'],
+                    'scopes': context.properties['scopes']
+                }
+            ],
             'networkInterfaces': [{
                 'network': '$(ref.' + context.env['deployment'] + '-public-vpc.selfLink)',
                 'subnetwork': '$(ref.' + context.env['deployment'] + '-public-vpc-subnet.selfLink)',

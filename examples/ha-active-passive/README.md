@@ -15,7 +15,7 @@ This example creates a HA Active-Passive configuration.
     - Sync
     - Management
 1. Firewalls
-    - Creates 'INGRESS' and 'EGRESS' rules allowgin all protocols.
+    - Creates 'INGRESS' and 'EGRESS' rules allowing all protocols.
 1. Route
     - Creates a route which has 'Next Hop IP' defined.
 1. External/Static IP
@@ -38,9 +38,9 @@ To use it, do a git clone of this repo and cd into the ha-active-passive folder 
 
 Make sure you have gcloud installed and configured.
 
-Provide the <FORTIGATE_VM_IMAGE>, upload <LICENSE_FILE> license files in the license folder and provide the <PATH_TO_LICENSE_FILE> (FGT LICENSE PATH) path in ha-active-passive.yaml file.
+Provide the <FORTIGATE_VM_IMAGE>, <SERVICE_ACCOUNT_EMAIL>, and provide <PATH_TO_LICENSE_FILE> (FGT LICENSE PATH) path in ha-active-passive.yaml file.
 
-NOTE: The example provided is for the CIDR 172.18.0.0/24 - 172.18.3.0/24, but if you have to update the CIDR Range, please udpate it in ha-active-passive.yaml file for Subnets, and appropriately update the active and passive scripts where the IP Address defined for Interfaces and HA.
+NOTE: The example provided is for the CIDR 172.18.0.0/24 - 172.18.3.0/24, but if you have to update the CIDR Range, please udpate it in ha-active-passive.yaml file for Subnets, and appropriately update the active and passive scripts where the IP Address are defined for Interfaces and HA.
 
 Then run
 
