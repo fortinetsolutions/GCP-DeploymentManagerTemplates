@@ -1,0 +1,105 @@
+config system global
+    set admin-sport 8443
+    set hostname active-active
+end
+config system admin
+    edit "admin"
+        set password fortinet
+    next
+end
+config router static
+    edit 1
+       set device port2
+       set dst 172.14.1.0 255.255.255.0
+       set gateway 172.14.1.1
+    next
+end
+config system probe-response
+    set mode http-probe
+end
+config system interface
+    edit "port2"
+        set defaultgw enable
+        set allowaccess ping https ssh
+    next
+    edit "loopback"
+        set vdom "root"
+        set ip 192.168.195.1 255.255.255.255
+        set allowaccess ping probe-response
+        set type loopback
+        set role lan
+    next
+end
+config firewall vip
+    edit "lb-probe"
+        # External Load Balancer IP
+        set extip $(ref.deployment-ha-elb-fr.IPAddress)
+        set extintf "port1"
+        set portforward enable
+        set mappedip 192.168.195.1
+        set extport 8008
+        set mappedport 8008
+    next
+        edit "to-internal-loadbalancer-port80"
+        set extip $(ref.deployment-ha-elb-fr.IPAddress)
+        set extintf "port1"
+        set portforward enable
+        # Internal Load Balancer IP
+        set mappedip $(ref.deployment-ha-ilb-fr.IPAddress)
+        set extport 80
+        set mappedport 80
+    next
+        edit "to-internal-loadbalancer-port443"
+        set extip $(ref.deployment-ha-elb-fr.IPAddress)
+        set extintf "port1"
+        set portforward enable
+        set mappedip $(ref.deployment-ha-ilb-fr.IPAddress)
+        set extport 443
+        set mappedport 443
+    next
+end
+config firewall service custom
+    edit "ProbeService-8008"
+        set comment "Default Probe Service for GCP on port 8008"
+        set tcp-portrange 8008
+    next
+end
+config firewall policy
+    edit 2
+        set name "DefaultGCPProbePolicy"
+        set srcintf "port1"
+        set dstintf "loopback"
+        set srcaddr "all"
+        set dstaddr "lb-probe"
+        set action accept
+        set schedule "always"
+        set service "ProbeService-8008"
+        set fsso disable
+        set nat enable
+        set comments "Default Policy to enable GCP loadbalancer probes on port 8008"
+    next
+    edit 3
+        set name "toLoadBalancerPort80"
+        set srcintf "port1"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "to-internal-loadbalancer-port80"
+        set action accept
+        set schedule "always"
+        set service "HTTP"
+        set fixedport enable
+        set nat enable
+    next
+    edit 4
+        set name "toLoadBalancerPort443"
+        set srcintf "port1"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "to-internal-loadbalancer-port443"
+        set action accept
+        set schedule "always"
+        set service "HTTP"
+        set fixedport enable
+        set nat enable
+    next
+end

@@ -14,17 +14,14 @@ def GenerateConfig(context):
                 'license': 'license.lic',
                 'user-data': 'byol'
             },
+            'serviceAccounts': [],
             'zone': context.properties['zone'],
             'vpcs': [{'vpc': 'public-vpc',
                       'subnet': 'public-vpc-subnet',
                       'accessConfigs': [{
                           'name': 'External NAT',
                           'type': 'ONE_TO_ONE_NAT'
-                      }]},
-                     {'vpc': 'private-vpc',
-                      'subnet': 'private-vpc-subnet',
-                      'accessConfigs': []}
-                     ]
+                      }]}],
         }
     }, {
         'name': 'nginx-instance',
@@ -41,11 +38,7 @@ def GenerateConfig(context):
                       'accessConfigs': [{
                           'name': 'External NAT',
                           'type': 'ONE_TO_ONE_NAT'
-                      }]},
-                     {'vpc': 'private-vpc',
-                      'subnet': 'private-vpc-subnet',
-                      'accessConfigs': []}
-                     ]
+                      }]}],
         }
     }, {
         'name': 'static-ip',

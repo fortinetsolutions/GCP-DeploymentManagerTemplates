@@ -1,0 +1,75 @@
+imports:
+- path: ha-active-active-template.py
+- path: ../../templates/aa-fgt-instance-template.py
+- path: ../../templates/firewall-template.py
+- path: ../../templates/nginx-instance-template.py
+- path: ../../templates/static-ip-template.py
+- path: ../../templates/subnet-template.py
+- path: ../../templates/vpc-template.py
+- path: scripts/fgt-bootstrap
+  name: fgt-bootstrap
+
+resources:
+- name: fgt-instances
+  type: ha-active-active-template.py
+  properties:
+    autohealingCheckIntervalSec: 5
+    autohealingTimeoutSec:  5
+    autohealingHealthyThreshold:  2
+    autohealingUnhealthyThreshold:  10 # 50 seconds
+    autohealingHttpsHealthCheck: 8443
+    initialDelaySec:  500
+    canIpForward: True
+    elbCheckIntervalSec: 3
+    elbTimeoutSec: 2
+    elbUnhealthyThreshold: 3
+    elbHcPort: 8008
+    image: <FORTIGATE_IMAGE>
+    machineType: n1-standard-2
+    imageProject: <FGT_IMAGE_PROJECT>
+    ilbHcPort: 80
+    region: us-central1
+    serviceAccountEmail: <SERVICE_ACCOUNT_EMAIL>
+    scopes:
+      - https://www.googleapis.com/auth/userinfo.email
+      - https://www.googleapis.com/auth/compute
+      - https://www.googleapis.com/auth/devstorage.read_only
+      - https://www.googleapis.com/auth/cloud-platform
+    targetSize: 2
+    windowsMachineType: n1-standard-1
+    windowsImage: windows-cloud/global/images/family/windows-2019
+    zone: us-central1-a
+- name: vpc
+  type: ../../templates/vpc-template.py
+  properties:
+    vpcs:
+      - public
+      - private
+- name: subnet
+  type: ../../templates/subnet-template.py
+  properties:
+    subnets:
+      - ipCidrRange: 172.14.0.0/24
+        region: us-central1
+        vpc: public-vpc
+      - ipCidrRange: 172.14.1.0/24
+        region: us-central1
+        vpc: private-vpc
+- name: firewall
+  type: ../../templates/firewall-template.py
+  properties:
+    vpcs:
+      - public-vpc
+      - private-vpc
+- name: static-ip
+  type: ../../templates/static-ip-template.py
+  properties:
+    region: us-central1
+
+outputs:
+- name: Bastion Host
+  value: $(ref.deployment-ha-static-ip.address)
+- name: Username
+  value: admin
+- name: password
+  value: ftntCl0ud

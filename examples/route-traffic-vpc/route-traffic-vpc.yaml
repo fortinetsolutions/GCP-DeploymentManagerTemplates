@@ -20,8 +20,9 @@ resources:
   type: route-traffic-vpc-template.py
   properties:
     canIpForward: False
-    image: skc-fgt-vm-image
+    image: <FORTIGATE_IMAGE>
     machineType: n1-standard-2
+    serviceAccountEmail: <SERVICE_ACCOUNT_EMAIL>
     zone: us-central1-a
 - name: vpc
   type: ../../templates/vpc-template.py

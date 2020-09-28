@@ -15,7 +15,7 @@ To use it, do a git clone of this repo and cd into the route-traffic-vpc folder 
 
 Make sure you have gcloud installed and configured.
 
-Provide the <FORTIGATE_VM_IMAGE> in route-traffic-vpc-template.py template and upload <LICENSE_FILE> in the license folder.
+Provide the <FORTIGATE_VM_IMAGE> in route-traffic-vpc-template.py template and provide <PATH_TO_LICENSE_FILE> (FGT LICENSE PATH) path in route-traffic-vpc.yaml file.
 
 Then run
 
